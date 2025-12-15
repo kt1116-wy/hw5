@@ -1,20 +1,4 @@
 # main.py
-from torch.nn.utils.rnn import pad_sequence
-
-def collate_batch(batch):
-  mels, labels = zip(*batch)
-  # Pad the mel pectrogram to make them have the same length
-  mels = pad_sequence(mels, batch_first=True)
-  return mels, torch.FloatTensor(labels)
-
-from google.colab import drive
-drive.mount('/content/drive')
-# Add the audio you generated to the training data. Remember to modify the meta.csv, and all the generated data should be label as 1 (generated from AI)
-!find /content/drive/MyDrive/generate_audio/ -name "*flowavenet*" -exec cp {} /content/train_dataset/wavs/ \;
-%cd /content/
-!find train_dataset -name "*flowavenet*wav" -exec echo {},1 \; >> /content/train_dataset/meta.csv
-
-# main.py
 import torch
 from torch.utils.data import DataLoader, random_split
 
