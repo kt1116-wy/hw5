@@ -51,3 +51,12 @@ print(f"Device: {device}")
 
 model = HW5Model(hidden_size=hidden_size, num_layers=num_layers, lr=lr, device=device)
 model.train_epochs(train_loader, val_loader, patience=patience, max_n_epochs=max_n_epochs)
+
+# Load your best model and plot the ROC curve of validation data
+# Remeber to download .png file and submit with your code
+model.load_state_dict(torch.load("best_model.ckpt"))
+y_pred_prob = model.predict_prob(val_loader)
+y_pred = model.predict(val_loader)
+y_true = torch.concat([labels for mel, labels in val_loader]).numpy().astype('float32')
+print(f'Accuracy on validation set: {(y_pred == y_true).sum() / len(y_true):.2f}')
+print(f'Area under precision recall curve on validation set: {model.evaluate(y_true, y_pred_prob):.2f}')
